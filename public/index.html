@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Watson Text-to-Speech using Docker</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Courier New", Courier, monospace;
+      background: linear-gradient(to bottom right, #ffd5ba, #fff6f0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: #fff6f0;
+      border: 2px solid #ed872d;
+      border-radius: 15px;
+      padding: 2rem;
+      max-width: 650px;
+      width: 95%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-family: monospace;
+      font-size: 1.3rem;
+      color: #009698;
+      background-color: #ffe4c9;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border-left: 5px solid #ed872d;
+      margin-bottom: 1.5rem;
+      white-space: pre-line;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      color: #ed872d;
+      margin-bottom: 0.5rem;
+      text-align: left;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      border: 2px solid #ffcba4;
+      border-radius: 10px;
+      background-color: #fffaf5;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #ed872d;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #d96500;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 1.2rem;
+    }
+
+    #downloadLink {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      background-color: #009698;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    #downloadLink:hover {
+      background-color: #007676;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>
+      # Watson Text-to-Speech using Docker
+    </h1>
+
+    <label for="voice">🎤 Choose a voice:</label>
+    <select id="voice">
+      <!-- Expressive Voices -->
+      <option value="en-AU_HeidiExpressive">🇦🇺 Australian - Heidi (Expressive)</option>
+      <option value="en-AU_JackExpressive">🇦🇺 Australian - Jack (Expressive)</option>
+      <option value="en-AU_MichaelExpressive">🇦🇺 Australian - Michael (Expressive)</option>
+      <option value="en-US_AllisonExpressive">🇺🇸 US - Allison (Expressive)</option>
+      <option value="en-US_EmmaExpressive">🇺🇸 US - Emma (Expressive)</option>
+      <option value="en-US_LisaExpressive">🇺🇸 US - Lisa (Expressive)</option>
+      <option value="en-GB_GeorgeExpressive">🇬🇧 UK - George (Expressive)</option>
+      <option value="pt-BR_LucasExpressive">🇧🇷 Brazilian - Lucas (Expressive)</option>
+      <option value="es-LA_DanielaExpressive">🌎 Latin American - Daniela (Expressive)</option>
+
+      <!-- V3 Voices -->
+      <option value="nl-NL_MerelV3Voice">🇳🇱 Dutch - Merel (V3)</option>
+      <option value="en-GB_CharlotteV3Voice">🇬🇧 UK - Charlotte (V3)</option>
+      <option value="en-GB_KateV3Voice">🇬🇧 UK - Kate (V3)</option>
+      <option value="en-US_AllisonV3Voice">🇺🇸 US - Allison (V3)</option>
+      <option value="en-US_EmilyV3Voice">🇺🇸 US - Emily (V3)</option>
+      <option value="en-US_HenryV3Voice">🇺🇸 US - Henry (V3)</option>
+      <option value="en-US_KevinV3Voice">🇺🇸 US - Kevin (V3)</option>
+      <option value="en-US_LisaV3Voice">🇺🇸 US - Lisa (V3)</option>
+      <option value="en-US_MichaelV3Voice">🇺🇸 US - Michael (V3)</option>
+      <option value="en-US_OliviaV3Voice">🇺🇸 US - Olivia (V3)</option>
+      <option value="fr-CA_LouiseV3Voice">🇨🇦 French (Canada) - Louise (V3)</option>
+      <option value="fr-FR_NicolasV3Voice">🇫🇷 French (France) - Nicolas (V3)</option>
+      <option value="fr-FR_ReneeV3Voice">🇫🇷 French (France) - Renee (V3)</option>
+      <option value="de-DE_BirgitV3Voice">🇩🇪 German - Birgit (V3)</option>
+      <option value="de-DE_DieterV3Voice">🇩🇪 German - Dieter (V3)</option>
+      <option value="de-DE_ErikaV3Voice">🇩🇪 German - Erika (V3)</option>
+      <option value="it-IT_FrancescaV3Voice">🇮🇹 Italian - Francesca (V3)</option>
+      <option value="ja-JP_EmiV3Voice">🇯🇵 Japanese - Emi (V3)</option>
+      <option value="ko-KR_JinV3Voice">🇰🇷 Korean - Jin (V3)</option>
+      <option value="pt-BR_IsabelaV3Voice">🇧🇷 Portuguese (Brazilian) - Isabela (V3)</option>
+      <option value="es-ES_EnriqueV3Voice">🇪🇸 Spanish (Spain) - Enrique (V3)</option>
+      <option value="es-ES_LauraV3Voice">🇪🇸 Spanish (Spain) - Laura (V3)</option>
+      <option value="es-LA_SofiaV3Voice">🌎 Spanish (Latin American) - Sofia (V3)</option>
+      <option value="es-US_SofiaV3Voice">🇺🇸 Spanish (North American) - Sofia (V3)</option>
+
+      <!-- Natural Voices -->
+      <option value="en-CA_HannahNatural">🇨🇦 English (Canada) - Hannah (Natural)</option>
+      <option value="en-GB_ChloeNatural">🇬🇧 UK - Chloe (Natural)</option>
+      <option value="en-GB_GeorgeNatural">🇬🇧 UK - George (Natural)</option>
+      <option value="en-US_EllieNatural">🇺🇸 US - Ellie (Natural)</option>
+      <option value="en-US_EmmaNatural">🇺🇸 US - Emma (Natural)</option>
+      <option value="en-US_EthanNatural">🇺🇸 US - Ethan (Natural)</option>
+      <option value="en-US_JacksonNatural">🇺🇸 US - Jackson (Natural)</option>
+      <option value="en-US_VictoriaNatural">🇺🇸 US - Victoria (Natural)</option>
+
+    </select>
+
+    <label for="text">📝 Enter your text:</label>
+    <textarea id="text">Hello! This is Watson Text-to-Speech using Docker container.</textarea>
+
+    <button onclick="convertToSpeech()">🔊 Convert to Speech</button>
+
+    <audio id="audioPlayer" controls></audio>
+
+    <a id="downloadLink" download="speech.wav">⬇ Download Audio</a>
+  </div>
+
+  <script>
+    async function convertToSpeech() {
+      const text = document.getElementById("text").value;
+      const voice = document.getElementById("voice").value;
+
+      const apiKey = "E5TpbxOFantTuWO_gLmCXPuaVsrgO76GSo8AJUiDaj8d";
+      const apiUrl = `https://api.au-syd.text-to-speech.watson.cloud.ibm.com/instances/8f52969f-3802-46fe-baa8-62365e535c5d/v1/synthesize?voice=${voice}`;
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "audio/wav",
+            "Authorization": "Basic " + btoa("apikey:" + apiKey)
+          },
+          body: JSON.stringify({ text: text })
+        });
+
+        if (!response.ok) {
+          alert("Error: " + response.statusText);
+          return;
+        }
+
+        const audioBlob = await response.blob();
+        const audioURL = URL.createObjectURL(audioBlob);
+
+        document.getElementById("audioPlayer").src = audioURL;
+
+        const downloadLink = document.getElementById("downloadLink");
+        downloadLink.href = audioURL;
+        downloadLink.style.display = "inline-block";
+      } catch (err) {
+        console.error("Fetch error:", err);
+        alert("Something went wrong. Check your network or API key.");
+      }
+    }
+  </script>
+</body>
+
+</html>

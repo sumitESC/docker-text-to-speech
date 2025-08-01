@@ -46,14 +46,6 @@ cd docker-text-to-speech
 docker build -t docker-text-to-speech .
 docker run -p 3000:3000 docker-text-to-speech</code></pre>
 
-<h2>🔗 Live Demo</h2>
-<p>
-  Try the live demo here:<br>
-  <a href="https://text-to-speech-latest.onrender.com" target="_blank">
-    https://text-to-speech-latest.onrender.com
-  </a>
-</p>
-
 
 <h2>📁 File Structure</h2>
 <pre><code>.
